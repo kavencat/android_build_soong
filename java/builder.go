@@ -132,7 +132,7 @@ var (
 	turbine, turbineRE = pctx.RemoteStaticRules("turbine",
 		blueprint.RuleParams{
 			Command: `rm -rf "$outDir" && mkdir -p "$outDir" && ` +
-				`$reTemplate${config.JavaCmd} ${config.JavaVmFlags} -jar ${config.TurbineJar} --output $out.tmp ` +
+				`$reTemplate${config.JavaCmd} -Xmx8204m ${config.JavaVmFlags} -jar ${config.TurbineJar} --output $out.tmp ` +
 				`--temp_dir "$outDir" --sources @$out.rsp  --source_jars $srcJars ` +
 				`--javacopts ${config.CommonJdkFlags} ` +
 				`$javacFlags -source $javaVersion -target $javaVersion -- $bootClasspath $classpath && ` +
@@ -201,7 +201,7 @@ var (
 				// leading to stale or missing files later in the build.  Remove the output file
 				// before running jarjar.
 				"rm -f ${out} && " +
-				"${config.JavaCmd} ${config.JavaVmFlags}" +
+				"${config.JavaCmd} -Xmx8204m ${config.JavaVmFlags}" +
 				// b/146418363 Enable Android specific jarjar transformer to drop compat annotations
 				// for newly repackaged classes. Dropping @UnsupportedAppUsage on repackaged classes
 				// avoids adding new hiddenapis after jarjar'ing.
@@ -224,7 +224,7 @@ var (
 
 	jetifier = pctx.AndroidStaticRule("jetifier",
 		blueprint.RuleParams{
-			Command:     "${config.JavaCmd}  ${config.JavaVmFlags} -jar ${config.JetifierJar} -l error -o $out -i $in",
+			Command:     "${config.JavaCmd} -Xmx8204m ${config.JavaVmFlags} -jar ${config.JetifierJar} -l error -o $out -i $in",
 			CommandDeps: []string{"${config.JavaCmd}", "${config.JetifierJar}"},
 		},
 	)
